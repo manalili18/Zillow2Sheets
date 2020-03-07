@@ -1,5 +1,4 @@
 
-// Warning Zillow api that I was using was deprecated :/
 
  /**
  * The event handler triggered when editing the spreadsheet.
@@ -20,21 +19,30 @@ function onEditInstallable(e) {
     // TODO fix bug! if selected a large range, it will not return
     if(curCol != 1) return;
 
-    // get value from current cell
-    var addr = curCell.getValue();
+    var titleCell = curSheet.getRange(1,2);
+    var curTitle = titleCell.getValue();
+    var titles = [];
 
-    Logger.log('addr: ' + addr);
-
-    var addr_csz = splitAddr(addr);
-
-    var address = addr_csz[0];
-    var citystatezip = addr_csz[1];
+    // get the top row info
+    while(curTitle) {
+        titles[titles.length] = curTitle;
+        titleCell = titleCell.offset(0,1);
+        curTitle = titleCell.getValue();
+    }
     
-    Logger.log('addr: ' + address);
-    Logger.log('csz: ' + citystatezip);
+    Logger.log('titles: ' + titles.toString());
 
-    // TODO scrape details into dict from ZillowAPI
-    var houseDetails = zillowScraper(address,citystatezip);
+    // get value from current cell
+    var url = curCell.getValue();
+
+    var houseDetails = zillowScraper(url);
+    
+
+
+
+
+
+
 
     // TODO populate row with houseDetails
     // TODO only populate row if it has a heading
@@ -122,7 +130,7 @@ function splitAddr(addr) {
 }
 
 // TODO
-function zillowScraper(addr,csz) {
+function zillowScraper(theURL,titles) {
     
     /* 
      * example API call
@@ -135,19 +143,13 @@ function zillowScraper(addr,csz) {
      */
 
     // URL formatting
-    var zwsid = '';
-    var theURL = 'https://www.zillow.com/webservice/GetSearchResults.htm?zws-id='
-        + zwsid + '&address=';
+    var webpage;
 
-    var addr_url = addr.replace(/ /g, '+');
-    var csz_url = csz.replace(/,/g, '%2C');
-    csz_url = csz_url.replace(/ /g, '+');
-
-    theURL = theURL + addr_url + '&citystatezip=' + csz_url;
-
-    Logger.log(theURL);
-    var webpage = UrlFetchApp.fetch(theURL).getContentText();
-    Logger.log(webpage);
+    try {
+        webpage = UrlFetchApp.fetch(theURL).getContentText();
+    } catch(e) {
+        Logger.log('oops, something happened with the url');
+    }
 
     // TODO list
     // URL dump from api

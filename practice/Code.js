@@ -48,3 +48,36 @@ function onEdit(e) {
   }
   
 }
+
+function splitAddr(addr) {
+    
+    /* 
+     * example API call
+     * we want to return an array with this addr and citystatezip info
+     *
+     * https://www.zillow.com/webservice/GetSearchResults.htm
+     *  ?zws-id=<ZWSID>
+     *  &address=2114+Bigelow+Ave
+     *  &citystatezip=Seattle%2C+WA
+     */
+
+    var split_i = addr.indexOf(',');
+    var len = addr.length;
+    
+    var address = addr.substring(0,split_i);
+    var citystatezip = addr.substring(split_i+1,len);
+
+    // TODO probably should throuw error here, but i just want code lmao
+    // to clarify, throuw error if the data isnt in the right format
+    // in otherwords, validate with regex probably
+    // if regex doesnt match, then you can throw error, probably most accurate
+    // way to exit without doing something weird.
+
+    // anyway, I gotta go, ttyl
+}
+
+    
+
+    
+
+    

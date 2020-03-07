@@ -1,9 +1,11 @@
 
+// Warning Zillow api that I was using was deprecated :/
+
  /**
  * The event handler triggered when editing the spreadsheet.
  * @param {Event} e The onEdit event.
  */
-function onEdit(e) {
+function onEditInstallable(e) {
     // Set a comment on the edited cell to indicate when it was changed.
     //Logger.log('something happened')
 
@@ -34,8 +36,6 @@ function onEdit(e) {
     // TODO scrape details into dict from ZillowAPI
     var houseDetails = zillowScraper(address,citystatezip);
 
-    
-
     // TODO populate row with houseDetails
     // TODO only populate row if it has a heading
     var editCell = curCell.offset(0,1);
@@ -58,6 +58,7 @@ function onEdit(e) {
 
         // go to next cell to the right
         editCell = editCell.offset(0,1);
+
     }
     
 
@@ -133,6 +134,21 @@ function zillowScraper(addr,csz) {
      *  &citystatezip=Seattle%2C+WA
      */
 
+    // URL formatting
+    var zwsid = '';
+    var theURL = 'https://www.zillow.com/webservice/GetSearchResults.htm?zws-id='
+        + zwsid + '&address=';
+
+    var addr_url = addr.replace(/ /g, '+');
+    var csz_url = csz.replace(/,/g, '%2C');
+    csz_url = csz_url.replace(/ /g, '+');
+
+    theURL = theURL + addr_url + '&citystatezip=' + csz_url;
+
+    Logger.log(theURL);
+    var webpage = UrlFetchApp.fetch(theURL).getContentText();
+    Logger.log(webpage);
+
     // TODO list
     // URL dump from api
     // scrape for details url
@@ -141,3 +157,36 @@ function zillowScraper(addr,csz) {
     var results_dict;
 
 }
+
+
+
+/**
+ *
+ * The only way to learn to code is to copy and paste from stackoverflow.
+ * The following function should handle http requests the way I want it to.
+ * TODO learn how to use this. Maybe just use a synchronous req instead.
+ * This is unavailable on google sheets, they have their own builtin tool
+ * 
+ * Source: https://stackoverflow.com/questions/247483/http-get-request-in-javascript
+ * Date Accessed: 2020 Mar 07
+ *
+ */
+/*
+function httpGetAsync(theUrl, callback) {
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+} 
+
+function httpGet(theUrl) {
+    var xmlHttp = new HttpRequest();
+    xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+    xmlHttp.send( null );
+    return xmlHttp.responseText;
+
+    
+} */

@@ -35,7 +35,7 @@ function onEditInstallable(e) {
     // get value from current cell
     var url = curCell.getValue();
 
-    var houseDetails = zillowScraper(url);
+    var houseDetails = zillowScraper(url,titles);
     
 
 
@@ -152,7 +152,6 @@ function zillowScraper(theURL,titles) {
     }
 
     // TODO list
-    // URL dump from api
     // scrape for details url
     // url dump from that details page
     // scrape for relevant details from sheets using keywords
